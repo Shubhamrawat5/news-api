@@ -1,0 +1,16 @@
+{
+  "name": "news-api",
+  "version": "1.0.0",
+  "description": "give json formatted tech news from different websites",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shubham Rawat",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "html-entities": "^2.1.0",
+    "jssoup": "0.0.12"
+  }
+}

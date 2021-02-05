@@ -1,178 +1,211 @@
-const axios = require('axios');
-const JSSoup = require('jssoup').default;
+const axios = require("axios");
+const JSSoup = require("jssoup").default;
 
 let newsObj = {};
 
 const filterNews = (news) => {
-  let reg = /Who|What|How|Here|This|These/;
-  if(!reg.test(news)) return true;
+  const reg = /Who|What|How|Here|This|These/;
+  if (!reg.test(news)) return true;
   else false;
-}
+};
 
-const gadgets_ndtv = async ()=>{
-  response = await axios.get('https://gadgets.ndtv.com/news');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings = soup.findAll("span","news_listing");
-
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    if(filterNews(heading))
-      news.push(heading);
+const engadget = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://www.engadget.com/");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headingBlock = soup.find("div", { id: "module-latest" });
+    let headings = headingBlock.findAll("h2");
+    for (let heading of headings) {
+      heading = heading.text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
-  newsObj["gadgets-ndtv"]=news;
-}
+  newsObj["engadget"] = news;
+};
 
-const gadgets_now = async ()=>{
-  response = await axios.get('https://www.gadgetsnow.com/tech-news');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headingBlock =  soup.find("div","tech_list"); //getting global div which is holding all news heading
+const gadgets_ndtv = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://gadgets.ndtv.com/news");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("span", "news_listing");
 
-  let headings = headingBlock.findAll("span","w_tle");
-
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
-  newsObj["gadgets-now"]=news;
-}
+  newsObj["gadgets-ndtv"] = news;
+};
 
-const inshorts = async ()=>{
-  response = await axios.get('https://inshorts.com/en/read/technology');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("div","news-card-title");
+const gadgets_now = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://www.gadgetsnow.com/tech-news");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headingBlock = soup.find("div", "tech_list"); //getting global div which is holding all news heading
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.find("span").text; //get text of the span element
-    if(filterNews(heading))
-      news.push(heading);
+    let headings = headingBlock.findAll("span", "w_tle");
+
+    for (let heading of headings) {
+      heading = heading.text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
-  newsObj["inshorts"]=news;
-}
+  newsObj["gadgets-now"] = news;
+};
 
-const techcrunch = async ()=>{
-  response = await axios.get('https://techcrunch.com/');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("h2","post-block__title");
+const inshorts = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://inshorts.com/en/read/technology");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("div", "news-card-title");
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    heading = heading.replace(/\t|\n/g,""); //remove \t and \n
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.find("span").text; //get text of the span element
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
-  newsObj["techcrunch"]=news;
-}
+  newsObj["inshorts"] = news;
+};
 
-const xda_developers = async ()=>{
-  response = await axios.get('https://www.xda-developers.com/category/xda-news/');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("div","item_content");
+const techcrunch = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://techcrunch.com/");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("h2", "post-block__title");
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.find("h4").text;
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.text;
+      heading = heading.replace(/\t|\n/g, ""); //remove \t and \n
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
-  newsObj["xda-developers"]=news;
-}
+  newsObj["techcrunch"] = news;
+};
 
-const mobile_reuters = async ()=>{
-  response = await axios.get('https://mobile.reuters.com/technology');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("h3","article-heading");
+const xda_developers = async () => {
+  let news = [];
+  try {
+    const response = await axios.get(
+      "https://www.xda-developers.com/category/xda-news/"
+    );
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("div", "item_content");
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.find("h4").text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
+  }
+  newsObj["xda-developers"] = news;
+};
+
+const mobile_reuters = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://mobile.reuters.com/technology");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("h3", "article-heading");
+
+    for (let heading of headings) {
+      heading = heading.text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
   newsObj["mobile-reuters"] = news;
-}
+};
 
-const business_insider = async ()=>{
-  response = await axios.get('https://www.businessinsider.in/tech/news');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("span","liststories_heading");
+const business_insider = async () => {
+  let news = [];
+  try {
+    const response = await axios.get(
+      "https://www.businessinsider.in/tech/news"
+    );
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("span", "liststories_heading");
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
   newsObj["business-insider"] = news;
-}
+};
 
-const india = async ()=>{
-  response = await axios.get('https://www.india.com/technology/');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("h3");
+const india = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://www.india.com/technology/");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("h3");
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    heading = heading.replace(/\s{2,6}/g,"'"); //remove multiple spaces
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.text;
+      heading = heading.replace(/\s{2,6}/g, "'"); //remove multiple spaces
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
   newsObj["india"] = news;
-}
+};
 
-const beebom = async ()=>{
-  response = await axios.get('https://beebom.com/category/news/');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headings =  soup.findAll("h3","entry-title");
+const beebom = async () => {
+  let news = [];
+  try {
+    const response = await axios.get("https://beebom.com/category/news/");
+    let htmlContent = response.data; //data field has html code
+    //scraping..
+    let soup = new JSSoup(htmlContent);
+    let headings = soup.findAll("h3", "entry-title");
 
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    if(filterNews(heading))
-      news.push(heading);
+    for (let heading of headings) {
+      heading = heading.text;
+      if (filterNews(heading)) news.push(heading);
+    }
+  } catch {
+    if (news.length == 0) news.push("None");
   }
   newsObj["beebom"] = news;
-}
-
-const india_today = async ()=>{
-  response = await axios.get('https://www.indiatoday.in/technology');
-  let htmlContent = response.data; //data field has html code
-  //scraping..
-  let soup = new JSSoup(htmlContent);
-  let headingBlock = soup.find("div","special-top-news");
-  let headings =  headingBlock.findAll("li");
-
-  let news=[];
-  for(let heading of headings){
-    heading = heading.text;
-    if(filterNews(heading))
-      news.push(heading);
-  }
-  newsObj["india-today"] = news;
-}
+};
 
 module.exports.getNews = async () => {
   console.log("GETTING NEWS!!!");
@@ -185,8 +218,19 @@ module.exports.getNews = async () => {
   const insider = business_insider();
   const ind = india();
   const bee = beebom();
-  const today = india_today();
+  const engad = engadget();
 
-  await Promise.all([gNdtv,gNow,inshts,crunch,xda,reuters,insider,ind,bee,today]);
+  await Promise.all([
+    gNdtv,
+    gNow,
+    inshts,
+    crunch,
+    xda,
+    reuters,
+    insider,
+    ind,
+    bee,
+    engad,
+  ]);
   return newsObj;
-}
+};

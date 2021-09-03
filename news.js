@@ -4,7 +4,7 @@ const JSSoup = require("jssoup").default;
 let newsObj = {};
 
 const filterNews = (news) => {
-  const reg = /Who|What|How|Here|This|These/;
+  const reg = /Who|What|How|Here|This|These|Watch|quiz|\?$|\.{3,6}/;
   if (!reg.test(news)) return true;
   else false;
 };
@@ -147,27 +147,6 @@ const mobile_reuters = async () => {
   newsObj["mobile-reuters"] = news;
 };
 
-const business_insider = async () => {
-  let news = [];
-  try {
-    const response = await axios.get(
-      "https://www.businessinsider.in/tech/news"
-    );
-    let htmlContent = response.data; //data field has html code
-    //scraping..
-    let soup = new JSSoup(htmlContent);
-    let headings = soup.findAll("span", "liststories_heading");
-
-    for (let heading of headings) {
-      heading = heading.text;
-      if (filterNews(heading)) news.push(heading);
-    }
-  } catch {
-    if (news.length == 0) news.push("None");
-  }
-  newsObj["business-insider"] = news;
-};
-
 const india = async () => {
   let news = [];
   try {
@@ -207,6 +186,14 @@ const beebom = async () => {
   newsObj["beebom"] = news;
 };
 
+const about = async () => {
+  newsObj["about"] = {
+    info: "this is a unofficial news-api from different popular tech news websites. Feel free to give it a star or add new website",
+    "my-github": "https://github.com/Shubhamrawat5",
+    "news-api-github": "https://github.com/Shubhamrawat5/news-api",
+  };
+};
+
 module.exports.getNews = async () => {
   console.log("GETTING NEWS!!!");
   const gNdtv = gadgets_ndtv();
@@ -215,7 +202,7 @@ module.exports.getNews = async () => {
   const crunch = techcrunch();
   const xda = xda_developers();
   const reuters = mobile_reuters();
-  const insider = business_insider();
+  const info = about();
   const ind = india();
   const bee = beebom();
   const engad = engadget();
@@ -227,7 +214,7 @@ module.exports.getNews = async () => {
     crunch,
     xda,
     reuters,
-    insider,
+    info,
     ind,
     bee,
     engad,

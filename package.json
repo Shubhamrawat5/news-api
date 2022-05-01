@@ -4,7 +4,8 @@
   "description": "give json formatted tech news from different websites",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "Shubham Rawat",
   "license": "ISC",

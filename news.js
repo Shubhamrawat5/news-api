@@ -39,6 +39,7 @@ const gadgets_ndtv = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
+      heading = heading.replace(/&quot;/g, ""); //remove "
       if (filterNews(heading)) news.push(heading);
     }
   } catch {

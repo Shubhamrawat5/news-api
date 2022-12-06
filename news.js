@@ -55,9 +55,7 @@ const gadgets_now = async () => {
     let htmlContent = response.data; //data field has html code
     //scraping..
     let soup = new JSSoup(htmlContent);
-    let headingBlock = soup.find("div", "tech_list"); //getting global div which is holding all news heading
-
-    let headings = headingBlock.findAll("span", "w_tle");
+    let headings = soup.findAll("figcaption"); //getting global div which is holding all news heading
 
     for (let heading of headings) {
       heading = heading.text;
@@ -136,7 +134,7 @@ const mobile_reuters = async () => {
     let htmlContent = response.data; //data field has html code
     //scraping..
     let soup = new JSSoup(htmlContent);
-    let headings = soup.findAll("h3", "article-heading");
+    let headings = soup.findAll("a", "media-story-card__heading__eqhp9");
 
     for (let heading of headings) {
       heading = heading.text;
@@ -201,24 +199,13 @@ module.exports.getNews = async () => {
   const gNow = gadgets_now();
   const inshts = inshorts();
   const crunch = techcrunch();
-  const xda = xda_developers();
   const reuters = mobile_reuters();
   const info = about();
-  const ind = india();
+  // const xda = xda_developers();
+  // const ind = india();
   const bee = beebom();
   const engad = engadget();
 
-  await Promise.all([
-    gNdtv,
-    gNow,
-    inshts,
-    crunch,
-    xda,
-    reuters,
-    info,
-    ind,
-    bee,
-    engad,
-  ]);
+  await Promise.all([gNdtv, gNow, inshts, crunch, reuters, info, bee, engad]);
   return newsObj;
 };

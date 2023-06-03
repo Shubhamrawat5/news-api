@@ -9,7 +9,17 @@ const filterNews = (news) => {
   else false;
 };
 
+const formatNews = (news) => {
+  news = news.replace(/"|'/g, ""); //remove quotation marks
+  news = news.replace(/&#39;|&#34;/g, ""); //remove quotation marks (in html format)
+  news = news.replace(/\t|\n/g, ""); //remove \t and \n
+  news = news.replace(/\s{2,6}/g, "'"); //remove multiple spaces
+  return news;
+};
+
 const engadget = async () => {
+  console.log("Fetching news from engadget");
+
   let news = [];
   try {
     const response = await axios.get("https://www.engadget.com/");
@@ -20,15 +30,19 @@ const engadget = async () => {
     let headings = headingBlock.findAll("h2");
     for (let heading of headings) {
       heading = heading.text;
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["engadget"] = news;
 };
 
 const gadgets_ndtv = async () => {
+  console.log("Fetching news from gadgets_ndtv");
+
   let news = [];
   try {
     const response = await axios.get("https://gadgets.ndtv.com/news");
@@ -39,16 +53,19 @@ const gadgets_ndtv = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
-      heading = heading.replace(/&quot;/g, ""); //remove "
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["gadgets-ndtv"] = news;
 };
 
 const gadgets_now = async () => {
+  console.log("Fetching news from gadgets_now");
+
   let news = [];
   try {
     const response = await axios.get("https://www.gadgetsnow.com/tech-news");
@@ -59,16 +76,19 @@ const gadgets_now = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
-      heading = heading.replace(/&quot;/g, ""); //remove "
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["gadgets-now"] = news;
 };
 
 const inshorts = async () => {
+  console.log("Fetching news from inshorts");
+
   let news = [];
   try {
     const response = await axios.get("https://inshorts.com/en/read/technology");
@@ -79,15 +99,19 @@ const inshorts = async () => {
 
     for (let heading of headings) {
       heading = heading.find("span").text; //get text of the span element
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["inshorts"] = news;
 };
 
 const techcrunch = async () => {
+  console.log("Fetching news from techcrunch");
+
   let news = [];
   try {
     const response = await axios.get("https://techcrunch.com/");
@@ -98,16 +122,19 @@ const techcrunch = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
-      heading = heading.replace(/\t|\n/g, ""); //remove \t and \n
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["techcrunch"] = news;
 };
 
 const xda_developers = async () => {
+  console.log("Fetching news from xda_developers");
+
   let news = [];
   try {
     const response = await axios.get(
@@ -120,15 +147,19 @@ const xda_developers = async () => {
 
     for (let heading of headings) {
       heading = heading.find("h4").text;
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["xda-developers"] = news;
 };
 
 const mobile_reuters = async () => {
+  console.log("Fetching news from mobile_reuters");
+
   let news = [];
   try {
     const response = await axios.get("https://mobile.reuters.com/technology");
@@ -139,15 +170,19 @@ const mobile_reuters = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["mobile-reuters"] = news;
 };
 
 const india = async () => {
+  console.log("Fetching news from india");
+
   let news = [];
   try {
     const response = await axios.get("https://www.india.com/technology/");
@@ -158,16 +193,19 @@ const india = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
-      heading = heading.replace(/\s{2,6}/g, "'"); //remove multiple spaces
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["india"] = news;
 };
 
 const beebom = async () => {
+  console.log("Fetching news from beebom");
+
   let news = [];
   try {
     const response = await axios.get("https://beebom.com/category/news/");
@@ -178,9 +216,11 @@ const beebom = async () => {
 
     for (let heading of headings) {
       heading = heading.text;
+      heading = formatNews(heading);
       if (filterNews(heading)) news.push(heading);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     if (news.length == 0) news.push("None");
   }
   newsObj["beebom"] = news;
@@ -199,14 +239,14 @@ module.exports.getNews = async () => {
   const gNdtv = gadgets_ndtv();
   const gNow = gadgets_now();
   const inshts = inshorts();
-  const crunch = techcrunch();
   const reuters = mobile_reuters();
   const info = about();
+  // const crunch = techcrunch();
   // const xda = xda_developers();
   // const ind = india();
   const bee = beebom();
   const engad = engadget();
 
-  await Promise.all([gNdtv, gNow, inshts, crunch, reuters, info, bee, engad]);
+  await Promise.all([gNdtv, gNow, inshts, reuters, info, bee, engad]);
   return newsObj;
 };

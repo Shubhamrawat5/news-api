@@ -11,7 +11,7 @@ const filterNews = (news) => {
 
 const formatNews = (news) => {
   news = news.replace(/"|'/g, ""); //remove quotation marks
-  news = news.replace(/&#39;|&#34;/g, ""); //remove quotation marks (in html format)
+  news = news.replace(/&#39;|&#34;|&quot;|&apos;/g, ""); //remove quotation marks (in html format)
   news = news.replace(/\t|\n/g, ""); //remove \t and \n
   news = news.replace(/\s{2,6}/g, "'"); //remove multiple spaces
   return news;

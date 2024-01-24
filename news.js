@@ -95,7 +95,7 @@ const inshorts = async () => {
     let htmlContent = response.data; //data field has html code
     //scraping..
     let soup = new JSSoup(htmlContent);
-    let headings = soup.findAll("span", { itemprop: "headline" });
+    let headings = soup.findAll("span", { itemProp: "headline" });
 
     for (let heading of headings) {
       heading = heading.text; //get text of the span element

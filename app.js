@@ -8,14 +8,11 @@ const refresh = async () => {
   const response = await news.getNews();
   newsJSON = JSON.stringify(response);
   // newsJSON = newsJSON.replace(/[\u{0080}-\u{FFFF}]/gu,"");
-  newsJSON = htmlEntities.decode(newsJSON);
   console.log("NEWS REFRESHED !!!");
 };
 
 setInterval(refresh, 1000 * 60 * 60 * 3); //3 hours (8 times a day)
 
-let hostname = "localhost";
-hostname = "0.0.0.0"; //for heroku
 const port = 80;
 
 const server = http.createServer((req, res) => {
@@ -49,6 +46,6 @@ const server = http.createServer((req, res) => {
   res.end(`${req.method} is not allowed for the request.`);
 });
 
-server.listen(process.env.PORT || port, hostname, () => {
+server.listen(process.env.PORT || port, () => {
   console.log("server started!");
 });
